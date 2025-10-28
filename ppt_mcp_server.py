@@ -21,13 +21,52 @@ from tools import (
     register_master_tools,
     register_transition_tools
 )
+# Add near the top with other imports
+from utils.s3_utils import get_s3_handler
+import logging
 
-# Initialize the FastMCP server
-app = FastMCP(
-    name="ppt-mcp-server"
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 
-# Global state to store presentations in memory
+# In the main() function, initialize S3 handler
+def main():
+    """Main entry point for the MCP server"""
+    
+    # Load environment variables
+    from dotenv import load_dotenv
+    load_dotenv()
+    
+    # Initialize and log S3 configuration
+    try:
+        from utils.s3_utils import get_s3_handler
+        s3_handler = get_s3_handler()
+        
+        if s3_handler.s3_enabled:
+            logging.info("=" * 60)
+            logging.info("S3 Storage: ENABLED")
+            logging.info(f"  Bucket: {s3_handler.s3_bucket}")
+            logging.info(f"  Prefix: {s3_handler.s3_prefix}")
+            logging.info(f"  Region: {s3_handler.s3_region}")
+            logging.info("=" * 60)
+        else:
+            logging.info("=" * 60)
+            logging.info("S3 Storage: DISABLED (Local file mode)")
+            logging.info("=" * 60)
+    except Exception as e:
+        logging.error(f"Failed to initialize S3 handler: {e}")
+    
+
+
+
+    # Initialize the FastMCP server
+app = FastMCP(
+        name="ppt-mcp-server"
+    )
+
+    # Global state to store presentations in memory
 presentations = {}
 current_presentation_id = None
 

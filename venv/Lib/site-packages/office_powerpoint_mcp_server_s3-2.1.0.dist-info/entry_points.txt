@@ -1,0 +1,2 @@
+[console_scripts]
+ppt_mcp_server = ppt_mcp_server:main

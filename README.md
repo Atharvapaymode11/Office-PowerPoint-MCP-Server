@@ -760,7 +760,67 @@ result = use_mcp_tool(
     }
 )
 ```
+## S3 Storage Support
 
+The PowerPoint MCP Server now supports saving presentations directly to Amazon S3!
+
+### Configuration
+
+Set these environment variables to enable S3:
+```json
+{
+  "mcpServers": {
+    "ppt": {
+      "command": "uvx",
+      "args": [
+        "--from", "office-powerpoint-mcp-server-s3", "ppt_mcp_server"
+      ],
+      "env": {
+        "S3_ENABLED": "true",
+        "S3_BUCKET_NAME": "your-bucket-name",
+        "S3_PREFIX": "presentations/",
+        "AWS_ACCESS_KEY_ID": "your-access-key-id",
+        "AWS_SECRET_ACCESS_KEY": "your-secret-access-key",
+        "AWS_DEFAULT_REGION": "us-east-1"
+      }
+    }
+  }
+}
+```
+
+### Environment Variables
+
+- `S3_ENABLED`: Set to "true" to enable S3 storage (default: "false")
+- `S3_BUCKET_NAME`: Your S3 bucket name (required if S3_ENABLED=true)
+- `S3_PREFIX`: Prefix/folder path in S3 (default: "presentations/")
+- `AWS_ACCESS_KEY_ID`: AWS access key
+- `AWS_SECRET_ACCESS_KEY`: AWS secret key  
+- `AWS_DEFAULT_REGION`: AWS region (default: "us-east-1")
+
+### Usage
+
+When S3 is enabled, `save_presentation` will automatically upload to S3:
+```python
+result = use_mcp_tool(
+    server_name="ppt",
+    tool_name="save_presentation",
+    arguments={
+        "file_path": "my_presentation.pptx",
+        "presentation_id": presentation_id
+    }
+)
+
+# Returns:
+{
+    "success": True,
+    "storage_type": "s3",
+    "s3_url": "s3://my-bucket/presentations/my_presentation.pptx",
+    "https_url": "https://my-bucket.s3.us-east-1.amazonaws.com/presentations/my_presentation.pptx",
+    "presigned_url": "https://...",  # Temporary access URL (1 hour)
+    "bucket": "my-bucket",
+    "key": "presentations/my_presentation.pptx"
+}
+```
 ## Template Support
 
 ### Working with Templates

@@ -3,41 +3,63 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "office-powerpoint-mcp-server"
-version = "2.0.6"
-description = "MCP Server for PowerPoint manipulation using python-pptx - Consolidated Edition"
+name = "office-powerpoint-mcp-server-s3"
+version = "2.1.0"
+description = "A MCP server for PowerPoint manipulation with S3 support"
 readme = "README.md"
-license = {file = "LICENSE"}
+requires-python = ">=3.10"
+license = {text = "MIT"}
 authors = [
-    {name = "GongRzhe", email = "gongrzhe@gmail.com"}
+    { name = "Athar Paymode", email = "your.email@example.com" }
 ]
+keywords = ["mcp", "powerpoint", "pptx", "s3", "aws"]
 classifiers = [
-    "Programming Language :: Python :: 3",
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
-    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
-requires-python = ">=3.6"
+
 dependencies = [
-    "python-pptx>=0.6.21",
-    "mcp[cli]>=1.3.0",
-    "Pillow>=8.0.0",
-    "fonttools>=4.0.0",
+    "python-pptx>=1.0.2",
+    "mcp>=1.1.2",
+    "Pillow>=10.0.0",
+    "fontTools>=4.42.0",
+    "boto3>=1.34.0",
+    "python-dotenv>=1.0.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "black>=23.0.0",
+    "mypy>=1.0.0",
 ]
 
 [project.urls]
-"Homepage" = "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server.git"
-"Bug Tracker" = "https://github.com/GongRzhe/Office-PowerPoint-MCP-Server.git/issues"
-
-[tool.hatch.build.targets.wheel]
-only-include = ["ppt_mcp_server.py", "tools/", "utils/", "enhanced_slide_templates.json", "slide_layout_templates.json"]
-sources = ["."]
-
-[tool.hatch.build]
-exclude = [
-  "public/demo.mp4",
-  "public/demo.gif",
-  "*.pptx"
-]
+Homepage = "https://github.com/Atharvapaymode11/Office-PowerPoint-MCP-Server"
+Repository = "https://github.com/Atharvapaymode11/Office-PowerPoint-MCP-Server"
+Issues = "https://github.com/Atharvapaymode11/Office-PowerPoint-MCP-Server/issues"
 
 [project.scripts]
 ppt_mcp_server = "ppt_mcp_server:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["tools", "utils"]
+include = [
+    "ppt_mcp_server.py",
+    "slide_layout_templates.json",
+]
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/ppt_mcp_server.py",
+    "/tools",
+    "/utils",
+    "/slide_layout_templates.json",
+    "/README.md",
+    "/pyproject.toml",
+]
